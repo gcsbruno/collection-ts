@@ -1,10 +1,10 @@
 import React from 'react';
-import { FiChevronRight } from 'react-icons/fi'
-import { Link } from 'react-router-dom'
-import { api } from '../../services/api'
-import { Title, Form, Repos, Error } from './styles'
-import logo from '../../assets/logo.svg';
+import { FiChevronRight } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 
+import { api } from '../../services/api';
+import { Title, Form, Repos, Error } from './styles';
+import logo from '../../assets/logo.svg';
 
 interface GithubRepository {
   full_name: string;
@@ -13,16 +13,15 @@ interface GithubRepository {
     login: string;
     avatar_url: string;
   };
-
 }
- const Dashboard: React.FC = () => {
+
+const Dashboard: React.FC = () => {
   const [repos, setRepos] = React.useState<GithubRepository[]>(() => {
     const storageRepos = localStorage.getItem('@GitCollection:repositories');
 
     if (storageRepos) {
-      return JSON.parse(storageRepos)
+      return JSON.parse(storageRepos);
     }
-
     return [];
   });
   const [newRepo, setNewRepo] = React.useState('');
@@ -31,7 +30,7 @@ interface GithubRepository {
 
   React.useEffect(() => {
     localStorage.setItem('@GitCollection:repositories', JSON.stringify(repos));
-  }, [repos])
+  }, [repos]);
 
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>): void {
     setNewRepo(event.target.value);
@@ -43,9 +42,10 @@ interface GithubRepository {
     event.preventDefault();
 
     if (!newRepo) {
-      setInputError('Informe o username/repositório')
-      return
+      setInputError('Informe o username/repositório');
+      return;
     }
+
     try {
       const response = await api.get<GithubRepository>(`repos/${newRepo}`);
 
@@ -54,19 +54,26 @@ interface GithubRepository {
       setRepos([...repos, repository]);
       formEl.current?.reset();
       setNewRepo('');
-      setInputError('')
+      setInputError('');
     } catch {
-      setInputError('Repositório não encontrado no github')
+      setInputError('Repositorio nao encontrado no Github');
     }
   }
 
   return (
     <>
       <img src={logo} alt="GitCollection" />
-      <Title> Catálogo de repositórios do GitHub </Title>
+      <Title>Catálogo de repositórios do Github</Title>
 
-      <Form ref={formEl} hasError={Boolean(inputError)} onSubmit={handleAddRepo}>
-        <input placeholder="username/repository_name" onChange={handleInputChange} />
+      <Form
+        ref={formEl}
+        hasError={Boolean(inputError)}
+        onSubmit={handleAddRepo}
+      >
+        <input
+          placeholder="username/repository_name"
+          onChange={handleInputChange}
+        />
         <button type="submit">Buscar</button>
       </Form>
 
@@ -74,7 +81,10 @@ interface GithubRepository {
 
       <Repos>
         {repos.map((repository, index) => (
-          <Link to={`/repositories/${repository.full_name + index}`} key={repository.full_name}>
+          <Link
+            to={`/repositories/${repository.full_name}`}
+            key={repository.full_name + index}
+          >
             <img
               src={repository.owner.avatar_url}
               alt={repository.owner.login}
@@ -87,9 +97,8 @@ interface GithubRepository {
           </Link>
         ))}
       </Repos>
-
     </>
-  )
-}
+  );
+};
 
 export default Dashboard;
