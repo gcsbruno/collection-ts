@@ -9,7 +9,7 @@
  - Axios
  - Analyzer
 
-## Disponível no netlify
+### Disponível no netlify
  https://gcsbrunogitcollection.netlify.app/
 
 Este foi um projeto desenvolvido com base de um curso na udemy, com o professor Jorge Aluizio.
